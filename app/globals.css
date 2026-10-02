@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/* Paleta fechada da marca: só estas 7 cores existem no site.
+   #cf0346 #f8f1f4 #dd487f #0d0d12 #f5bbd3 #ec8bb1 #c6b7bf */
+:root {
+  color-scheme: light;
+  --bg: #f8f1f4;
+  --fg: #0d0d12;
+  --muted: #0d0d12;
+  --accent-text: #cf0346;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent-text: var(--accent-text);
+  --color-accent: #cf0346;
+  --color-accent-hover: #dd487f;
+  --color-tint: #f5bbd3;
+  --color-tint-strong: #ec8bb1;
+  --color-line: #c6b7bf;
+  --color-ink: #0d0d12;
+  --color-paper: #f8f1f4;
+
+  --font-sans: var(--font-outfit);
+
+  /* Uma única curva e uma única sombra para o site inteiro. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-lift: 0 24px 48px -24px rgb(13 13 18 / 0.4);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-rise: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-word: word 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @keyframes word {
+    from {
+      transform: translateY(115%);
+    }
+  }
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+button,
+summary,
+select {
+  cursor: pointer;
+}
+
+::selection {
+  background: #f5bbd3;
+  color: #0d0d12;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+/* Animações ligadas à rolagem, sem JavaScript. Navegadores sem suporte
+   mostram o estado final parado. */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes elevate {
+  to {
+    box-shadow: 0 12px 32px -20px rgb(13 13 18 / 0.45);
+  }
+}
+@keyframes drift {
+  from {
+    transform: translateY(-5%) scale(1.12);
+  }
+  to {
+    transform: translateY(5%) scale(1.12);
+  }
+}
+
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    animation: grow-x linear both;
+    animation-timeline: scroll(root);
+  }
+  .nav-elevate {
+    animation: elevate linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 120px;
+  }
+  .parallax {
+    animation: drift linear both;
+    animation-timeline: view();
+  }
+  .draw-line {
+    animation: grow-x linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 50%;
+  }
+}
+
+/* Abre e fecha as perguntas frequentes com altura animada. */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      content-visibility 0.4s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .scroll-progress {
+    display: none;
+  }
+}
